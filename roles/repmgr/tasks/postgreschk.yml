@@ -1,0 +1,29 @@
+# file: postgresql/tasks/postgreschk.yml
+
+- name: PostgreSQL Check  | Add service xinetd 
+  template:
+    src: etc_xinetd_postgreschk.j2
+    dest: "/etc/xinetd.d/postgreschk"
+    owner: "root"
+    group: "root"
+    mode: 0640
+
+- name: PostgreSQL Check  | Add Script 
+  template:
+    src: postgreschk.j2
+    dest: "/usr/local/sbin/postgreschk"
+    owner: "root"
+    group: "root"
+    mode: 0755
+
+- name: PostgresSQL Check | add port for postgreschk
+  shell: sh -c "sudo echo 'postgreschk 9201/tcp' >> /etc/services"
+  become: yes
+
+- name: PostgresSQL Check | enable and start xinetd service
+  systemd:
+    name: xinetd.service
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  become: true

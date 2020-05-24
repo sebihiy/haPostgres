@@ -1,0 +1,6 @@
+---
+- src: https://github.com/sebihiy/postgresql.git
+  version: v1.12.0
+  name: postgresql
+  scm: git
+

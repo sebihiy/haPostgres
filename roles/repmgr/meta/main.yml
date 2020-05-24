@@ -1,0 +1,27 @@
+# file: postgresql/meta/main.yml
+
+galaxy_info:
+  author: pjan vandaele
+  company: ANXS
+  description: "Install and configure PostgreSQL, dependencies, extensions, databases and users."
+  min_ansible_version: 2.4.0
+  license: MIT
+
+  platforms:
+  - name: EL
+    versions:
+    - 6
+    - 7
+
+  galaxy_tags:
+  - postgresql
+  - postgres
+  - database
+  - database:sql
+  - sql
+  - postgis
+  - centos
+  - redhat
+  - fedora
+
+dependencies: []

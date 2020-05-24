@@ -1,0 +1,8 @@
+all:
+  children:
+    postgres_cluster:
+      hosts:
+        PGS01:
+        PGS02:
+      vars:
+        ansible_user: "root"
