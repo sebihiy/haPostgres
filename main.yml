@@ -1,0 +1,10 @@
+---
+- hosts: all
+  remote_user: ansible
+  become: yes
+  vars_files:
+    - vars/vars.{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.yml
+    - vars/custom.yml
+  roles:
+    - postgresql
+ 

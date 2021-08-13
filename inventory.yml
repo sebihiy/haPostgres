@@ -1,0 +1,8 @@
+all:
+  children:
+    postgres_cluster:
+      hosts:
+        192.168.1.142:
+        192.168.1.143:
+      vars:
+        ansible_user: "root"

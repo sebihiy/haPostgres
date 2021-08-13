@@ -1,0 +1,65 @@
+# Basic settings
+postgresql_version: 11
+postgresql_encoding: "UTF-8"
+postgresql_locale: "fr_FR.UTF-8"
+postgresql_ctype: "fr_FR.UTF-8"
+postgresql_admin_user: "postgres"
+postgresql_default_auth_method: "peer"
+postgresql_service_enabled: false # should the service be enabled, default is true
+postgresql_cluster_name: "main"
+postgresql_cluster_reset: false
+postgresql_listen_addresses: "*"
+postgresql_wal_level: "replica"
+postgresql_max_wal_senders: 10
+postgresql_max_replication_slots: 10
+postgresql_wal_keep_segments: 100
+postgresql_hot_standby: on
+postgresql_archive_mode: on
+postgresql_archive_command: "/bin/true"
+postgresql_shared_preload_libraries:
+  - repmgr
+
+## access postgres cluster  pg_hba 
+repmgr_version: 5.2.1
+postgresql_pg_hba_custom:
+  - { type: "host", database: "replication", user: "repmgr", address: "127.0.0.1/32", method: "trust" }
+  - { type: "host", database: "all", user: "chkuser", address: "127.0.0.1/32", method: "md5" }
+  - { type: "host", database: "all", user: "chkuser", address: "::1/128", method: "md5" }
+  - { type: "host", database: "all", user: "chkuser", address: "localhost", method: "md5" }
+  - { type: "host", database: "all", user: "chkuser", address: "192.168.1.142/32", method: "md5" }
+  - { type: "host", database: "all", user: "chkuser", address: "192.168.1.143/32", method: "md5" }
+  - { type: "host", database: "all", user: "repmgr", address: "192.168.1.142/32", method: "trust" }
+  - { type: "host", database: "all", user: "repmgr", address: "192.168.1.143/32", method: "trust" }
+  - { type: "host", database: "replication", user: "repmgr", address: "192.168.1.142/32", method: "trust" }
+  - { type: "host", database: "replication", user: "repmgr", address: "192.168.1.143/32", method: "trust" }
+  - { type: "host", database: "all", user: "all", address: "0.0.0.0/0", method: "trust" }
+
+# Manage replication with repmgr (optional)
+postgresql_ext_install_repmgr: yes
+repmgr_target_group: "postgres_cluster"
+repmgr_user: repmgr
+repmgr_database: repmgr
+check_user: chkuser
+
+postgresql_users:
+  - name: "{{repmgr_user}}"
+    pass: "pass"
+  - name: "{{check_user}}"
+    pass: "pass"
+    encrypted: yes  # if password should be encrypted, postgresql >= 10 does only accepts encrypted passwords
+
+postgresql_databases:
+  - name: "{{repmgr_database}}"
+    owner: "{{repmgr_user}}"
+    encoding: "UTF-8"
+
+postgresql_user_privileges:
+  - name: "{{repmgr_user}}"
+    db: "{{repmgr_database}}"
+    priv: "ALL"
+    role_attr_flags: "SUPERUSER,REPLICATION,CREATEROLE,CREATEDB"
+  - name: "{{check_user}}"
+    db: "postgres"
+    priv: "ALL"
+    role_attr_flags: "SUPERUSER,CREATEROLE,CREATEDB"
+
